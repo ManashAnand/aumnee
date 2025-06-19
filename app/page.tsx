@@ -1,9 +1,30 @@
+"use client";
+
+import { useState } from "react";
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { BarChart3, Users, Calendar, Target } from 'lucide-react';
 
 export default function Home() {
+
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  
+  const handleFetch = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/jira");
+      const json = await res.json();
+      console.log("Fetched Jira issues:", json);
+      setData(json.issues); // Assuming the response contains a field `issues`
+    } catch (err) {
+      console.error("Error fetching Jira data:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -15,6 +36,29 @@ export default function Home() {
             Track engineer bandwidth, velocity, and sprint performance with beautiful visualizations
           </p>
         </div>
+
+
+
+
+         <div className="p-6">
+      <button
+        onClick={handleFetch}
+        className="px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        {loading ? "Loading..." : "Fetch Jira Data"}
+      </button>
+
+      {data && (
+        <ul className="mt-4 space-y-2">
+           {/* @ts-ignore */}
+          {data.map((issue:any) => (
+            <li key={issue.id} className="border p-2 rounded">
+              <strong>{issue.key}</strong>: {issue.fields.summary}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           <Card className="hover:shadow-lg transition-shadow duration-200">
