@@ -1,66 +1,24 @@
 "use client";
 
-import { useState } from "react";
 import Link from 'next/link';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BarChart3, Users, Calendar, Target } from 'lucide-react';
+import { BarChart3, Users, Calendar } from 'lucide-react';
 
 export default function Home() {
-
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
-  
-  const handleFetch = async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/jira");
-      const json = await res.json();
-      console.log("Fetched Jira issues:", json);
-      setData(json.issues); // Assuming the response contains a field `issues`
-    } catch (err) {
-      console.error("Error fetching Jira data:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-            Jira Sprint Analytics
+            Sprint Analytics Dashboard
           </h1>
           <p className="mt-4 text-xl text-gray-600">
-            Track engineer bandwidth, velocity, and sprint performance with beautiful visualizations
+            Track engineer bandwidth, velocity, and sprint performance with real-time Jira data
           </p>
         </div>
 
-
-
-
-         <div className="p-6">
-      <button
-        onClick={handleFetch}
-        className="px-4 py-2 bg-blue-600 text-white rounded"
-      >
-        {loading ? "Loading..." : "Fetch Jira Data"}
-      </button>
-
-      {data && (
-        <ul className="mt-4 space-y-2">
-           {/* @ts-ignore */}
-          {data.map((issue:any) => (
-            <li key={issue.id} className="border p-2 rounded">
-              <strong>{issue.key}</strong>: {issue.fields.summary}
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           <Card className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
@@ -70,7 +28,7 @@ export default function Home() {
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Track individual developer performance, leave days, and story point delivery
+                Track individual developer performance and story point delivery
               </p>
             </CardContent>
           </Card>
@@ -79,12 +37,12 @@ export default function Home() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="h-5 w-5 text-green-600" />
-                Bandwidth Analysis
+                Sprint Analysis
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Visualize bandwidth allocation vs actual delivery with interactive charts
+                Visualize sprint progress and team velocity with interactive charts
               </p>
             </CardContent>
           </Card>
@@ -92,13 +50,13 @@ export default function Home() {
           <Card className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Target className="h-5 w-5 text-purple-600" />
-                Velocity Tracking
+                <Calendar className="h-5 w-5 text-purple-600" />
+                Leave Impact
               </CardTitle>
             </CardHeader>
             <CardContent>
               <p className="text-gray-600">
-                Monitor effective velocity and identify performance trends across the team
+                Understand leave patterns and their impact on sprint capacity
               </p>
             </CardContent>
           </Card>
@@ -111,28 +69,6 @@ export default function Home() {
             </Button>
           </Link>
         </div>
-
-        <Card className="mt-12">
-          <CardHeader>
-            <CardTitle>Sprint Period: 07/05 - 10/06</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-blue-500" />
-                <span><strong>10 working days</strong> total sprint duration</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Target className="h-4 w-4 text-green-500" />
-                <span><strong>4 SP/day</strong> baseline capacity per developer</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <BarChart3 className="h-4 w-4 text-purple-500" />
-                <span><strong>20% buffer</strong> allocated for bug fixes</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

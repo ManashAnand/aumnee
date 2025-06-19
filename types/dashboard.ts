@@ -3,9 +3,15 @@ export interface JiraIssue {
   issueType: "Story" | "Task" | "Bug";
   assignee: string;
   storyPoints: number;
-  startDate: string; // "YYYY-MM-DD"
-  closeDate: string; // "YYYY-MM-DD"
+  techStartDate: string; // "YYYY-MM-DD"
+  techCloseDate: string; // "YYYY-MM-DD"
   status: string;
+}
+
+export interface LeaveEntry {
+  developer: string;
+  startDate: string; // "DD/MM"
+  endDate: string;  // "DD/MM"
 }
 
 export interface LeaveDays {
@@ -20,4 +26,6 @@ export interface DeveloperMetrics {
   adjustedBandwidth: number;
   deliveredStoryPoints: number;
   effectiveVelocity: number;
+  leaveDetails: string;
+  sprintContribution: number; // Percentage of sprint days the developer was active
 }
