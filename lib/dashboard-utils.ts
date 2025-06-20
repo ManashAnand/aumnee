@@ -10,7 +10,6 @@ export function calculateDeveloperMetrics(
   jiraIssues: JiraIssue[],
   leaveDaysMap: { [key: string]: { days: number; period: string } }
 ): DeveloperMetrics[] {
-  // Group issues by assignee
   const issuesByDeveloper: { [key: string]: JiraIssue[] } = {};
   
   jiraIssues.forEach(issue => {
@@ -20,7 +19,6 @@ export function calculateDeveloperMetrics(
     issuesByDeveloper[issue.assignee].push(issue);
   });
 
-  // Get all unique developers
   const allDevelopers = new Set([
     ...Object.keys(issuesByDeveloper),
     ...Object.keys(leaveDaysMap)
@@ -30,14 +28,12 @@ export function calculateDeveloperMetrics(
     const developerIssues = issuesByDeveloper[developer] || [];
     const leaveInfo = leaveDaysMap[developer] || { days: 0, period: 'No leaves' };
     
-    // Calculate metrics
     const totalSprintDays = getWorkingDays(SPRINT_START, SPRINT_END);
     const leaves = leaveInfo.days;
     const availableDays = totalSprintDays - leaves;
     const rawBandwidth = availableDays * STORY_POINTS_PER_DAY;
     const adjustedBandwidth = rawBandwidth * (1 - BUG_DEDUCTION_PERCENTAGE);
     
-    // Calculate delivered story points (only "Done" issues within sprint period)
     const deliveredStoryPoints = developerIssues
       .filter(issue => {
         const isWithinSprint = new Date(issue.techCloseDate) >= new Date(SPRINT_START) && 
@@ -46,14 +42,12 @@ export function calculateDeveloperMetrics(
       })
       .reduce((sum, issue) => sum + issue.storyPoints, 0);
     
-    // Calculate sprint contribution based on tech start/close dates
     const sprintContribution = developerIssues.length > 0 
       ? Math.max(...developerIssues.map(issue => 
           calculateSprintContribution(issue.techStartDate, issue.techCloseDate)
         ))
       : 0;
 
-    // Calculate effective velocity
     const effectiveVelocity = adjustedBandwidth > 0 ? deliveredStoryPoints / adjustedBandwidth : 0;
 
     return {
@@ -67,7 +61,7 @@ export function calculateDeveloperMetrics(
       leaveDetails: leaveInfo.period,
       sprintContribution
     };
-  }).sort((a, b) => b.effectiveVelocity - a.effectiveVelocity); // Sort by velocity descending
+  }).sort((a, b) => b.effectiveVelocity - a.effectiveVelocity);
 }
 
 export function formatVelocity(velocity: number): string {

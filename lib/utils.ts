@@ -6,13 +6,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Convert DD/MM format to YYYY-MM-DD
 export function convertToISODate(date: string, year: string = "2024"): string {
   const [day, month] = date.split('/');
   return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
 }
 
-// Calculate working days between two dates (excluding weekends)
 export function getWorkingDays(startDate: string, endDate: string): number {
   const start = new Date(startDate);
   const end = new Date(endDate);
@@ -28,7 +26,6 @@ export function getWorkingDays(startDate: string, endDate: string): number {
   return workingDays;
 }
 
-// Calculate leave days within sprint period
 export function calculateLeaveDaysInSprint(
   leaveStart: string, 
   leaveEnd: string, 
@@ -40,24 +37,20 @@ export function calculateLeaveDaysInSprint(
   const sprintStartDate = new Date(sprintStart);
   const sprintEndDate = new Date(sprintEnd);
 
-  // If leave period is outside sprint period
   if (leaveEndDate < sprintStartDate || leaveStartDate > sprintEndDate) {
     return 0;
   }
 
-  // Adjust dates to sprint period if needed
   const effectiveStart = leaveStartDate < sprintStartDate ? sprintStartDate : leaveStartDate;
   const effectiveEnd = leaveEndDate > sprintEndDate ? sprintEndDate : leaveEndDate;
 
   return getWorkingDays(effectiveStart.toISOString().split('T')[0], effectiveEnd.toISOString().split('T')[0]);
 }
 
-// Format date range for display
 export function formatDateRange(startDate: string, endDate: string): string {
   return `${startDate} - ${endDate}`;
 }
 
-// Calculate sprint contribution percentage
 export function calculateSprintContribution(
   techStartDate: string,
   techCloseDate: string,

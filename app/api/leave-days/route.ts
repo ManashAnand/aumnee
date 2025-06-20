@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import { LeaveEntry } from '@/types/dashboard';
 import { calculateLeaveDaysInSprint, formatDateRange } from '@/lib/utils';
 
-// Mock leave data from the Google sheet
 const mockLeaveEntries: LeaveEntry[] = [
   { developer: "Aakarsh Mahajan", startDate: "09/06", endDate: "15/06" },
   { developer: "Yash Moda", startDate: "01/05", endDate: "10/05" },
@@ -14,7 +13,6 @@ const mockLeaveEntries: LeaveEntry[] = [
 ];
 
 export async function GET() {
-  // Calculate leave days within sprint period for each developer
   const leaveDaysMap = mockLeaveEntries.reduce((acc, entry) => {
     const leaveDays = calculateLeaveDaysInSprint(entry.startDate, entry.endDate);
     acc[entry.developer] = {

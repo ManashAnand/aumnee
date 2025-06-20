@@ -25,24 +25,24 @@ export default function DashboardPage() {
         setLoading(true);
         setError(null);
 
-        // Fetch real Jira data
         const jiraResponse = await fetch('/api/jira');
         if (!jiraResponse.ok) {
           throw new Error('Failed to fetch Jira data');
         }
         const jiraData = await jiraResponse.json();
-
-        // Fetch leave data
+        console.log("jiraData from frontend ", jiraData)
         const leaveResponse = await fetch('/api/leave-days');
         if (!leaveResponse.ok) {
           throw new Error('Failed to fetch leave data');
         }
         const leaveData = await leaveResponse.json();
+        console.log("leaveData from frontend ", leaveData)
 
         setJiraIssues(jiraData);
         setLeaveDays(leaveData);
 
         const calculatedMetrics = calculateDeveloperMetrics(jiraData, leaveData);
+        console.log("calculatedMetrics from frontend ", calculatedMetrics)
         setMetrics(calculatedMetrics);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -83,23 +83,19 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Sprint Analytics</h1>
           <p className="mt-2 text-gray-600">
             Sprint Period: 07/05 - 10/06 • {jiraIssues.length} Issues • {metrics.length} Developers
           </p>
         </div>
-
-        {/* Summary Stats */}
+ 
         <SummaryStats metrics={metrics} />
 
-        {/* Chart */}
         <div className="mb-8">
           <BandwidthChart metrics={metrics} />
         </div>
 
-        {/* Tabbed Content */}
         <Tabs defaultValue="table" className="w-full">
           <TabsList className="grid w-full grid-cols-2 lg:w-auto lg:grid-cols-2">
             <TabsTrigger value="table" className="flex items-center gap-2">
@@ -121,7 +117,6 @@ export default function DashboardPage() {
           </TabsContent>
         </Tabs>
 
-        {/* Methodology Info */}
         <Card className="mt-8">
           <CardHeader>
             <CardTitle>Sprint Analytics Methodology</CardTitle>
